@@ -1,0 +1,21 @@
+INSERT INTO flight (flight_number, schedule_time, flight_type, airport_code, airport_name, location, status, delayed)
+VALUES
+  ('FL001', '2023-08-05T12:00:00', 'INBOUND', 'ABC', 'Airport 1', 'Location 1', 'ARRIVAL', false),
+  ('FL002', '2023-08-05T14:30:00', 'OUTBOUND', 'DEF', 'Airport 2', 'Location 2', 'DELAY', true),
+  ('FL003', '2023-08-06T08:45:00', 'INBOUND', 'XYZ', 'Airport 3', 'Location 3', 'ARRIVAL', false),
+  ('FL004', '2023-08-06T15:00:00', 'OUTBOUND', 'GHI', 'Airport 4', 'Location 4', 'DEPARTURE', false),
+  ('FL005', '2023-08-07T10:30:00', 'INBOUND', 'JKL', 'Airport 5', 'Location 5', 'DELAY', true),
+  ('FL006', '2023-08-07T18:15:00', 'OUTBOUND', 'MNO', 'Airport 6', 'Location 6', 'DEPARTURE', false),
+  ('FL007', '2023-08-08T07:45:00', 'INBOUND', 'PQR', 'Airport 7', 'Location 7', 'ARRIVAL', false),
+  ('FL008', '2023-08-08T12:30:00', 'OUTBOUND', 'STU', 'Airport 8', 'Location 8', 'DELAY', true),
+  ('FL009', '2023-08-09T09:00:00', 'INBOUND', 'VWX', 'Airport 9', 'Location 9', 'ARRIVAL', false),
+  ('FL010', '2023-08-09T17:20:00', 'OUTBOUND', 'YZA', 'Airport 10', 'Location 10', 'DEPARTURE', false),
+  ('FL011', '2023-08-10T06:45:00', 'INBOUND', 'BCD', 'Airport 11', 'Location 11', 'DELAY', true),
+  ('FL012', '2023-08-10T13:10:00', 'OUTBOUND', 'EFG', 'Airport 12', 'Location 12', 'DEPARTURE', false),
+  ('FL013', '2023-08-11T11:30:00', 'INBOUND', 'HIJ', 'Airport 13', 'Location 13', 'ARRIVAL', false),
+  ('FL014', '2023-08-11T19:55:00', 'OUTBOUND', 'KLM', 'Airport 14', 'Location 14', 'DELAY', true),
+  ('FL015', '2023-08-12T08:15:00', 'INBOUND', 'NOP', 'Airport 15', 'Location 15', 'ARRIVAL', false),
+  ('FL016', '2023-08-12T16:40:00', 'OUTBOUND', 'QRS', 'Airport 16', 'Location 16', 'DEPARTURE', false),
+  ('FL017', '2023-08-13T07:10:00', 'INBOUND', 'TUV', 'Airport 17', 'Location 17', 'DELAY', true),
+  ('FL018', '2023-08-13T13:55:00', 'OUTBOUND', 'WXY', 'Airport 18', 'Location 18', 'DEPARTURE', false),
+  ('FL030', '2023-08-20T10:00:00', 'INBOUND', 'ZYX', 'Airport 30', 'Location 30', 'DELAY', true);
