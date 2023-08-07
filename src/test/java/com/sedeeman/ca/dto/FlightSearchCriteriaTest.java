@@ -1,68 +1,75 @@
 package com.sedeeman.ca.dto;
 
+import com.sedeeman.ca.model.Flight;
 import com.sedeeman.ca.model.FlightStatus;
+import com.sedeeman.ca.model.FlightType;
+import com.sedeeman.ca.repository.FlightRepository;
+import com.sedeeman.ca.service.FlightSearchService;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.*;
 
-public class FlightSearchCriteriaTest {
+@ExtendWith(MockitoExtension.class)
+class FlightSearchCriteriaTest {
+    @InjectMocks
+    private FlightSearchService flightSearchService;
+
+    @Mock
+    private FlightRepository flightRepository;
 
     @Test
-    public void testGettersAndSetters() {
-        String flightNumber = "ABC123";
-        String airportCode = "JFK";
-        String airportName = "John F. Kennedy International Airport";
-        FlightStatus status = FlightStatus.ARRIVAL;
-        LocalDateTime scheduledTimeFrom = LocalDateTime.of(2023, 8, 10, 0, 0);
-        LocalDateTime scheduledTimeTo = LocalDateTime.of(2023, 8, 15, 23, 59, 59);
-
+    void testSearchFlights() {
         FlightSearchCriteria criteria = new FlightSearchCriteria();
-        criteria.setFlightNumber(flightNumber);
-        criteria.setAirportCode(airportCode);
-        criteria.setAirportName(airportName);
-        criteria.setStatus(status);
-        criteria.setScheduledTimeFrom(scheduledTimeFrom);
-        criteria.setScheduledTimeTo(scheduledTimeTo);
 
-        assertEquals(flightNumber, criteria.getFlightNumber());
-        assertEquals(airportCode, criteria.getAirportCode());
-        assertEquals(airportName, criteria.getAirportName());
-        assertEquals(status, criteria.getStatus());
-        assertEquals(scheduledTimeFrom, criteria.getScheduledTimeFrom());
-        assertEquals(scheduledTimeTo, criteria.getScheduledTimeTo());
+        List<Flight> expectedFlights = Arrays.asList(new Flight(), new Flight());
+
+        when(flightRepository.searchFlights(any(), any(), any(), any(), any(), any(), any(), any()))
+                .thenReturn(expectedFlights);
+
+        List<Flight> result = flightSearchService.searchFlights(criteria);
+
+        assertEquals(expectedFlights, result);
+        verify(flightRepository).searchFlights(
+                criteria.getFlightNumber(),
+                criteria.getFlightTypeAsEnum(),
+                criteria.getAirportCode(),
+                criteria.getAirportName(),
+                criteria.getLocation(),
+                criteria.getStatusAsEnum(),
+                criteria.getScheduledTimeFrom(),
+                criteria.getScheduledTimeTo()
+        );
     }
 
     @Test
-    public void testDefaultConstructor() {
+    void testGetFlightTypeAsEnum() {
         FlightSearchCriteria criteria = new FlightSearchCriteria();
-        assertNull(criteria.getFlightNumber());
-        assertNull(criteria.getAirportCode());
-        assertNull(criteria.getAirportName());
-        assertNull(criteria.getStatus());
-        assertNull(criteria.getScheduledTimeFrom());
-        assertNull(criteria.getScheduledTimeTo());
+        criteria.setFlightType("inbound");
+
+        FlightType expectedType = FlightType.INBOUND;
+        FlightType actualType = criteria.getFlightTypeAsEnum();
+
+        assertEquals(expectedType, actualType);
     }
 
     @Test
-    public void testAllArgsConstructor() {
-        String flightNumber = "ABC123";
-        String airportCode = "JFK";
-        String airportName = "John F. Kennedy International Airport";
-        FlightStatus status = FlightStatus.ARRIVAL;
-        LocalDateTime scheduledTimeFrom = LocalDateTime.of(2023, 8, 10, 0, 0);
-        LocalDateTime scheduledTimeTo = LocalDateTime.of(2023, 8, 15, 23, 59, 59);
+    void testGetStatusAsEnum() {
+        FlightSearchCriteria criteria = new FlightSearchCriteria();
+        criteria.setStatus("arrival");
 
-        FlightSearchCriteria criteria = new FlightSearchCriteria(flightNumber, airportCode, airportName,
-                status, scheduledTimeFrom, scheduledTimeTo);
+        FlightStatus expectedStatus = FlightStatus.ARRIVAL;
+        FlightStatus actualStatus = criteria.getStatusAsEnum();
 
-        assertEquals(flightNumber, criteria.getFlightNumber());
-        assertEquals(airportCode, criteria.getAirportCode());
-        assertEquals(airportName, criteria.getAirportName());
-        assertEquals(status, criteria.getStatus());
-        assertEquals(scheduledTimeFrom, criteria.getScheduledTimeFrom());
-        assertEquals(scheduledTimeTo, criteria.getScheduledTimeTo());
+        assertEquals(expectedStatus, actualStatus);
     }
+
 }
+

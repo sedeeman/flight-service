@@ -1,6 +1,8 @@
 package com.sedeeman.ca.repository;
 
 import com.sedeeman.ca.model.Flight;
+import com.sedeeman.ca.model.FlightStatus;
+import com.sedeeman.ca.model.FlightType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -12,13 +14,22 @@ import java.util.List;
 public interface FlightRepository extends JpaRepository<Flight, Long> {
 
     @Query("SELECT f FROM Flight f WHERE " +
-            "(:flightNumber IS NULL OR f.flightNumber = :flightNumber) AND " +
-            "(:airportCode IS NULL OR f.airportCode = :airportCode) AND " +
-            "(:airportName IS NULL OR f.airportName = :airportName) AND " +
-            "(:status IS NULL OR f.status = :status) AND " +
-            "(:scheduledTimeFrom IS NULL OR f.scheduledTime >= :scheduledTimeFrom) AND " +
-            "(:scheduledTimeTo IS NULL OR f.scheduledTime <= :scheduledTimeTo)")
-    List<Flight> searchFlights(String flightNumber, String airportCode, String airportName,
-                               String status, LocalDateTime scheduledTimeFrom, LocalDateTime scheduledTimeTo);
-
+            "(:flightNumber is null or f.flightNumber = :flightNumber) " +
+            "and (:flightType is null or f.flightType = :flightType) " +
+            "and (:airportCode is null or f.airportCode = :airportCode) " +
+            "and (:airportName is null or f.airportName = :airportName) " +
+            "and (:location is null or f.location = :location) " +
+            "and (:status is null or f.status = :status) " +
+            "and (:scheduledTimeFrom is null or f.scheduledTime >= :scheduledTimeFrom) " +
+            "and (:scheduledTimeTo is null or f.scheduledTime <= :scheduledTimeTo)")
+    List<Flight> searchFlights(
+            String flightNumber,
+            FlightType flightType,
+            String airportCode,
+            String airportName,
+            String location,
+            FlightStatus status,
+            LocalDateTime scheduledTimeFrom,
+            LocalDateTime scheduledTimeTo
+    );
 }

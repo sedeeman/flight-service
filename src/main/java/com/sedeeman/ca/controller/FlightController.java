@@ -56,7 +56,7 @@ public class FlightController {
 
         if (CollectionUtils.isEmpty(flights)) {
             logger.warn("Flights are not available");
-            return new ResponseEntity<>(new SuccessResponse<>(HttpStatus.NO_CONTENT.value(), HttpStatus.NO_CONTENT.getReasonPhrase(), "Products are not available", flights), HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(new SuccessResponse<>(HttpStatus.NO_CONTENT.value(), HttpStatus.NO_CONTENT.getReasonPhrase(), "Flights are not available", flights), HttpStatus.NO_CONTENT);
         }
 
         logger.info("Flights fetched successfully");
@@ -68,7 +68,7 @@ public class FlightController {
      * Add a flight.
      *
      * @param flightAddRequest
-     * @return Product
+     * @return Flight
      */
     @PostMapping
     @Operation(description = "Successfully Add a new flight", responses = {
@@ -86,10 +86,10 @@ public class FlightController {
             )
 
     })
-    public ResponseEntity<SuccessResponse<Flight>> createProduct(@RequestBody @Valid FlightAddRequest flightAddRequest) {
+    public ResponseEntity<SuccessResponse<Flight>> addFlight(@RequestBody @Valid FlightAddRequest flightAddRequest) {
 
         Flight savedFlight = flightService.addFlight(flightAddRequest);
-        return new ResponseEntity<>(new SuccessResponse<>(HttpStatus.CREATED.value(), HttpStatus.CREATED.getReasonPhrase(), "Add a new product", savedFlight), HttpStatus.CREATED);
+        return new ResponseEntity<>(new SuccessResponse<>(HttpStatus.CREATED.value(), HttpStatus.CREATED.getReasonPhrase(), "Add a new Flight", savedFlight), HttpStatus.CREATED);
     }
 
 

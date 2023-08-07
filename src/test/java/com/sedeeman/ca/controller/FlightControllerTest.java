@@ -65,13 +65,13 @@ class FlightControllerTest {
         assertNotNull(successResponse);
         assertEquals(HttpStatus.NO_CONTENT.value(), successResponse.getCode());
         assertEquals(HttpStatus.NO_CONTENT.getReasonPhrase(), successResponse.getStatus());
-        assertEquals("Products are not available", successResponse.getMessage());
-        assertEquals(new ArrayList<>(),successResponse.getData());
+        assertEquals("Flights are not available", successResponse.getMessage());
+        assertEquals(new ArrayList<>(), successResponse.getData());
     }
 
 
     @Test
-    void testCreateProduct_Success() {
+    void testAddFlight_Success() {
         FlightAddRequest request = new FlightAddRequest();
         request.setFlightNumber("ABC123");
 
@@ -81,14 +81,14 @@ class FlightControllerTest {
 
         when(flightService.addFlight(any(FlightAddRequest.class))).thenReturn(savedFlight);
 
-        ResponseEntity<SuccessResponse<Flight>> responseEntity = flightController.createProduct(request);
+        ResponseEntity<SuccessResponse<Flight>> responseEntity = flightController.addFlight(request);
 
         assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
         SuccessResponse successResponse = responseEntity.getBody();
         assertNotNull(successResponse);
         assertEquals(HttpStatus.CREATED.value(), successResponse.getCode());
         assertEquals(HttpStatus.CREATED.getReasonPhrase(), successResponse.getStatus());
-        assertEquals("Add a new product", successResponse.getMessage());
+        assertEquals("Add a new Flight", successResponse.getMessage());
 
         Flight responseData = (Flight) successResponse.getData();
         assertNotNull(responseData);
@@ -97,12 +97,12 @@ class FlightControllerTest {
     }
 
     @Test
-    void testCreateProduct_Exception() {
+    void testAddFlight_Exception() {
         FlightAddRequest request = new FlightAddRequest();
 
         when(flightService.addFlight(any(FlightAddRequest.class))).thenThrow(new DataIntegrityViolationException("Duplicate flight number"));
 
-        assertThrows(DataIntegrityViolationException.class, () -> flightController.createProduct(request));
+        assertThrows(DataIntegrityViolationException.class, () -> flightController.addFlight(request));
     }
 
 }

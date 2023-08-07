@@ -19,8 +19,15 @@ public class FlightSearchService {
     }
 
     public List<Flight> searchFlights(FlightSearchCriteria criteria) {
-        return flightRepository.searchFlights(criteria.getFlightNumber(), criteria.getAirportCode(),
-                criteria.getAirportName(), String.valueOf(criteria.getStatus()), criteria.getScheduledTimeFrom(),
-                criteria.getScheduledTimeTo());
+        return flightRepository.searchFlights(
+                criteria.getFlightNumber(),
+                criteria.getFlightTypeAsEnum(),
+                criteria.getAirportCode(),
+                criteria.getAirportName(),
+                criteria.getLocation(),
+                criteria.getStatusAsEnum(),
+                criteria.getScheduledTimeFrom(),
+                criteria.getScheduledTimeTo()
+        );
     }
 }
