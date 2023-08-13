@@ -7,22 +7,18 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
-
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class FlightSearchCriteria {
-    private String flightNumber;
-    private String flightType;
-    private String airportCode;
-    private String airportName;
-    private String location;
-    private String status;
-    private LocalDateTime scheduledTimeFrom;
-    private LocalDateTime scheduledTimeTo;
+public class FlightSearchRequest {
 
+    private String flightNumber;
+    private String originLocation;
+    private String destinationLocation;
+    private String terminalGate;
+    private String flightType;
+    private String status;
 
     public FlightType getFlightTypeAsEnum() {
         if (flightType == null || flightType.isEmpty()) {

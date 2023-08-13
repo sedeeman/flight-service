@@ -1,6 +1,7 @@
 package com.sedeeman.ca.response;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -9,9 +10,11 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
+@DisplayName("SuccessResponse Test")
 class SuccessResponseTest {
 
     @Test
+    @DisplayName("Test getters and setters")
     void testGettersAndSetters() {
         Integer code = 200;
         String status = "OK";
@@ -31,6 +34,7 @@ class SuccessResponseTest {
     }
 
     @Test
+    @DisplayName("Test no-args constructor")
     void testNoArgsConstructor() {
         SuccessResponse<String> successResponse = new SuccessResponse<>();
 
@@ -41,6 +45,7 @@ class SuccessResponseTest {
     }
 
     @Test
+    @DisplayName("Test all-args constructor")
     void testAllArgsConstructor() {
         Integer code = 200;
         String status = "OK";
@@ -56,6 +61,7 @@ class SuccessResponseTest {
     }
 
     @Test
+    @DisplayName("Test JsonPropertyOrder annotation")
     void testJsonPropertyOrder() throws Exception {
         SuccessResponse<String> successResponse = new SuccessResponse<>(200, "OK", "Success", "Data");
 

@@ -19,19 +19,18 @@
 #### Add New Flight
 This API endpoint allows you to add a new flight to the database.
 
-URL: [http://localhost:3000/api/flights](http://localhost:3000/api/flights)
+URL: [http://localhost:3000/api/flight-service](http://localhost:3000/api/flight-service)
 Method: POST
 Request Body: A JSON object representing the details of the new flight.
 `{
-"flightId": 1,
-"flightNumber": "Boeing737",
-"scheduledTime": "2023-08-05T15:30:00",
-"flightType": "OUTBOUND",
-"airportCode": "YVR3",
-"airportName": "Vancourer International Airport",
-"location": "Vancourer, BC",
-"status": "departure",
-"delayed": false
+"flightNumber": "AC12791",
+"originLocation": "YVR3",
+"destinationLocation": "Vancouver",
+"departureTime": "2023-08-06T10:00:00",
+"arrivalTime": "2023-08-06T11:30:00",
+"flightType": "INBOUND",
+"terminalGate": "A14",
+"status": "DEPARTURE"
 }`
 
 Response: Returns a success message along with the details of the newly added flight.
@@ -39,16 +38,17 @@ Response: Returns a success message along with the details of the newly added fl
 `{
 "code": 201,
 "status": "Created",
-"message": "Successfully Add a new Flight",
+"message": "Successfully added a new Flight",
 "data": {
-"flightId": 1,
-"flightNumber": "Boeing737",
-"scheduledTime": "2023-08-05T15:30:00",
-"flightType": "OUTBOUND",
-"airportCode": "YVR3",
-"airportName": "Vancourer International Airport",
-"location": "Vancourer, BC",
-"status": "departure",
+"flightId": 10,
+"flightNumber": "AC12791",
+"originLocation": "YVR3",
+"destinationLocation": "Vancouver",
+"flightType": "INBOUND",
+"terminalGate": "A14",
+"arrivalTime": "2023-08-06T11:30:00",
+"departureTime": "2023-08-06T10:00:00",
+"status": "DEPARTURE",
 "delayed": false
 }
 }`
@@ -56,7 +56,7 @@ Response: Returns a success message along with the details of the newly added fl
 #### Get All Flights
 This API endpoint allows you to retrieve a list of all flights.
 
-URL: [http://localhost:3000/api/flights](http://localhost:3000/api/flights)
+URL: [http://localhost:3000/api/flight-service](http://localhost:3000/api/flight-service)
 Method: GET
 Response: Returns a JSON array containing the list of flights.
 `{
@@ -66,24 +66,26 @@ Response: Returns a JSON array containing the list of flights.
 "data": [
 {
 "flightId": 1,
-"flightNumber": "Boeing737",
-"scheduledTime": "2023-08-05T15:30:00",
+"flightNumber": "AC126",
+"originLocation": "Galle",
+"destinationLocation": "Vancouver",
 "flightType": "OUTBOUND",
-"airportCode": "YVR3",
-"airportName": "Vancourer International Airport",
-"location": "Vancourer, BC",
-"status": "DEPARTURE",
+"terminalGate": "A13",
+"arrivalTime": "2023-08-06T11:30:00",
+"departureTime": "2023-08-06T10:00:00",
+"status": "SCHEDULED",
 "delayed": true
 },
 {
 "flightId": 2,
-"flightNumber": "Boeing747",
-"scheduledTime": "2023-08-05T15:30:00",
-"flightType": "INBOUND",
-"airportCode": "YVR3",
-"airportName": "Vancourer International Airport",
-"location": "Vancourer, BC",
-"status": "ARRIVAL",
+"flightNumber": "AC127",
+"originLocation": "Galle",
+"destinationLocation": "Vancouver",
+"flightType": "OUTBOUND",
+"terminalGate": "A13",
+"arrivalTime": "2023-08-06T11:30:00",
+"departureTime": "2023-08-06T10:00:00",
+"status": "DEPARTURE",
 "delayed": true
 }
 ]
@@ -92,44 +94,47 @@ Response: Returns a JSON array containing the list of flights.
 #### Search Flight
 This API endpoint allows you to search flights
 
-URL: [http://localhost:3000/api/flights?flightNumber=Boeing737](http://localhost:3000/api/flights?flightNumber=Boeing737)
+URL: [http://localhost:3000/api/flight-service/search?flightNumber=Beoing7372](http://localhost:3000/api/flight-service/search?flightNumber=Beoing7372)
 Method: GET
+Query Params = flightNumber,originLocation,destinationLocation, flightType, terminalGate, arrivalTime, departureTime, status
+
 
 Response: Returns a success message along with the details of searched flight.
 `{
 "code": 200,
 "status": "OK",
-"message": "Successfully retrieved flights",
+"message": "Successfully searched flights",
 "data": [
 {
-"flightId": 1,
-"flightNumber": "Boeing737",
-"scheduledTime": "2023-08-05T15:30:00",
-"flightType": "OUTBOUND",
-"airportCode": "YVR3",
-"airportName": "Vancourer International Airport",
-"location": "Vancourer, BC",
-"status": "DEPARTURE",
+"flightId": 2,
+"flightNumber": "Beoing7372",
+"originLocation": "Calgary",
+"destinationLocation": "Vancouver",
+"flightType": "INBOUND",
+"terminalGate": "Gate2",
+"arrivalTime": "2023-08-13T06:21:25",
+"departureTime": "2023-08-13T08:21:25",
+"status": "SCHEDULED",
 "delayed": true
 }
 ]
 }`
 
-#### Flight Search Criteria
+#### Update Flight Status and Fire Event to RabbitMQ Message Queue
 
-To perform a flight search, you can utilize the `FlightSearchCriteria` class which provides a structured way to filter flights based on various attributes. Here is an overview of the available search criteria:
+##### PATCH http://localhost:3000/api/flight-service/{flightId}
 
-- `flightNumber`: The flight number associated with the flight.
-- `flightType`: The type of the flight (e.g., inbound, outbound).
-- `airportCode`: The code of the airport related to the flight.
-- `airportName`: The name of the airport related to the flight.
-- `location`: The location or destination of the flight.
-- `status`: The status of the flight (e.g., arrival, departure, delay).
-- `scheduledTimeFrom`: The earliest scheduled departure or arrival time.
-- `scheduledTimeTo`: The latest scheduled departure or arrival time.
+In this update, the flight status has been modified, triggering an event that is sent to the RabbitMQ message queue. The Notification Service now listens for these status changes and sends out email notifications to subscribers, tailored to their preferences.
 
-### H2 Database
-The Flight Service Microservice uses an H2 in-memory database by default. You can modify the database connection properties in the application.properties file if you want to switch to a different database.
+Request body example:
+
+`{
+"flightNumber":"FL123",
+"status":"arrival"
+}`
+
+### MySQL Database
+The Flight Service Microservice uses an MySQL Database You can modify the database connection properties in the application.properties file if you want to switch to a different database.
 
 ### Swagger2 Documentation
 The API endpoints are documented using Swagger2. To access the documentation, launch the application and navigate to the following URL in your web browser:

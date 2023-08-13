@@ -56,7 +56,7 @@ public class SpringDocConfig {
 
         return new OpenAPI()
                 .components(components)
-                .info(new Info().title("Airport Arrival Departure Service Doc").version("1.0.0").description("Spring Boot RESTful APIs Implementation for flight service"));
+                .info(new Info().title("Flight Service Doc").version("1.0.0").description("Spring Boot RESTful APIs Implementation for flight service"));
     }
 
 }

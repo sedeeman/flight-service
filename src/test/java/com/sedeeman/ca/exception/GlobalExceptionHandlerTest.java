@@ -1,6 +1,7 @@
 package com.sedeeman.ca.exception;
 
 import com.sedeeman.ca.response.ErrorResponse;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.MethodParameter;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -17,11 +18,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@DisplayName("GlobalExceptionHandler Test")
 class GlobalExceptionHandlerTest {
 
     private GlobalExceptionHandler globalExceptionHandler = new GlobalExceptionHandler();
 
     @Test
+    @DisplayName("Handle MethodArgumentNotValidException")
     void testHandleValidationException() {
         List<FieldError> fieldErrors = Collections.singletonList(new FieldError("objectName", "fieldName", "Field is required"));
 
@@ -41,6 +44,7 @@ class GlobalExceptionHandlerTest {
     }
 
     @Test
+    @DisplayName("Handle DataIntegrityViolationException")
     void testHandleDataIntegrityViolationException() {
         DataIntegrityViolationException exception = new DataIntegrityViolationException("Data integrity violation");
 
@@ -55,6 +59,7 @@ class GlobalExceptionHandlerTest {
     }
 
     @Test
+    @DisplayName("Handle DataLoadingException")
     void testHandleDataLoadingException() {
         DataLoadingException exception = new DataLoadingException("Data loading error");
 
@@ -69,6 +74,7 @@ class GlobalExceptionHandlerTest {
     }
 
     @Test
+    @DisplayName("Handle Generic Exception")
     void testHandleGenericException() {
         Exception exception = new Exception("An unexpected error");
 
