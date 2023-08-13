@@ -1,19 +1,21 @@
 package com.sedeeman.ca.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
-import javax.validation.constraints.Max;
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode
 @Entity
-@Table(name = "flight")
+@Table
 public class Flight {
 
     @Id
@@ -22,45 +24,48 @@ public class Flight {
     @Column(name = "flight_id")
     private Long flightId;
 
-    @NonNull
+    @NotNull
     @NotBlank
-    @Max(value = 9999999999L)
     @Column(name = "flight_number", unique = true)
     private String flightNumber;
 
-    @NonNull
-    @Column(name = "schedule_time")
-    private LocalDateTime scheduledTime;
+    @NotNull
+    @NotBlank
+    @Size(min = 1, max = 100)
+    @Column(name = "origin_location")
+    private String originLocation;
 
-    @NonNull
+    @NotNull
+    @NotBlank
+    @Size(min = 1, max = 100)
+    @Column(name = "destination_location")
+    private String destinationLocation;
+
+    @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "flight_type")
     private FlightType flightType;
 
-    @NonNull
+    @NotNull
     @NotBlank
     @Size(min = 1, max = 100)
-    @Column(name = "airport_code")
-    private String airportCode;
+    @Column(name = "terminal_gate")
+    private String terminalGate;
 
-    @NonNull
-    @NotBlank
-    @Size(min = 1, max = 100)
-    @Column(name = "airport_name")
-    private String airportName;
+    @NotNull
+    @Column(name = "arrival_time")
+    private LocalDateTime arrivalTime;
 
-    @NonNull
-    @NotBlank
-    @Size(min = 1, max = 100)
-    private String location;
+    @Column(name = "departure_time")
+    private LocalDateTime departureTime;
 
-    @NonNull
+    @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private FlightStatus status;
 
-    @NonNull
-    @Column(name = "delayed")
-    private boolean delayed;
+    @NotNull
+    @Column(name = "is_delayed")
+    private boolean isDelayed;
 
 }

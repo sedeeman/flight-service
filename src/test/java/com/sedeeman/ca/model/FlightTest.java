@@ -1,101 +1,115 @@
 package com.sedeeman.ca.model;
 
-import com.sedeeman.ca.repository.FlightRepository;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 class FlightTest {
 
-    @Mock
-    private FlightRepository flightRepository;
-
-    @InjectMocks
     private Flight flight;
+
+    private Validator validator;
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.initMocks(this);
+        flight = new Flight();
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        validator = factory.getValidator();
+    }
 
+    @Test
+    @DisplayName("Test getters and setters")
+    void testGettersAndSetters() {
         flight.setFlightId(1L);
         flight.setFlightNumber("ABC123");
-        flight.setScheduledTime(LocalDateTime.now());
+        flight.setOriginLocation("Toronto");
+        flight.setDestinationLocation("Vancouver");
         flight.setFlightType(FlightType.INBOUND);
-        flight.setAirportCode("Code1");
-        flight.setAirportName("Airport1");
-        flight.setLocation("Location1");
-        flight.setStatus(FlightStatus.ARRIVAL);
-        flight.setDelayed(false);
+        flight.setTerminalGate("A12");
+        flight.setArrivalTime(LocalDateTime.now());
+        flight.setDepartureTime(LocalDateTime.now().plusHours(1));
+        flight.setStatus(FlightStatus.DELAY);
+        flight.setDelayed(true);
+
+        assertEquals(1L, flight.getFlightId());
+        assertEquals("ABC123", flight.getFlightNumber());
+        assertEquals("Toronto", flight.getOriginLocation());
+        assertEquals("Vancouver", flight.getDestinationLocation());
+        assertEquals(FlightType.INBOUND, flight.getFlightType());
+        assertEquals("A12", flight.getTerminalGate());
+        assertNotNull(flight.getArrivalTime());
+        assertNotNull(flight.getDepartureTime());
+        assertEquals(FlightStatus.DELAY, flight.getStatus());
+        assertTrue(flight.isDelayed());
     }
 
     @Test
-    void testGetAllFlights() {
+    @DisplayName("Test equals and hashCode methods")
+    void testEqualsAndHashCode() {
         Flight flight1 = new Flight();
-        flight1.setFlightNumber("ABC123");
-        flight1.setDelayed(true);
+        flight1.setFlightId(1L);
+        flight1.setFlightNumber("Boeing737");
 
         Flight flight2 = new Flight();
-        flight2.setFlightNumber("XYZ456");
-        flight2.setDelayed(false);
+        flight2.setFlightId(1L);
+        flight2.setFlightNumber("Boeing737");
 
-        List<Flight> flights = Arrays.asList(flight1, flight2);
+        assertEquals(flight1, flight2);
+        assertEquals(flight1.hashCode(), flight2.hashCode());
 
-        when(flightRepository.findAll()).thenReturn(flights);
-
-        List<Flight> result = flightRepository.findAll();
-
-        assertEquals(2, result.size());
-        assertTrue(result.get(0).isDelayed());
-        assertFalse(result.get(1).isDelayed());
+        flight2.setFlightNumber("XYZ789");
+        assertNotEquals(flight1, flight2);
+        assertNotEquals(flight1.hashCode(), flight2.hashCode());
     }
+
 
     @Test
-    void testAddFlight() {
-        Flight newFlight = new Flight();
-        newFlight.setFlightNumber("DEF789");
-        newFlight.setScheduledTime(LocalDateTime.now());
-        newFlight.setFlightType(FlightType.OUTBOUND);
-        newFlight.setAirportCode("Code2");
-        newFlight.setAirportName("Airport2");
-        newFlight.setLocation("Location2");
-        newFlight.setStatus(FlightStatus.ARRIVAL);
-        newFlight.setDelayed(false);
+    @DisplayName("Test validation annotations")
+    void testValidationAnnotations() {
+        Flight invalidFlight = new Flight(
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                true
+        );
 
-        when(flightRepository.save(any(Flight.class))).thenReturn(newFlight);
+        Set<ConstraintViolation<Flight>> violations = validator.validate(invalidFlight);
+        assertEquals(11, violations.size());
 
-        Flight result = flightRepository.save(newFlight);
+        Flight validFlight = new Flight(
+                1L,
+                "ABC123",
+                "Toronto",
+                "Vancouver",
+                FlightType.INBOUND,
+                "A12",
+                LocalDateTime.now(),
+                LocalDateTime.now().plusHours(1),
+                FlightStatus.DELAY,
+                true
+        );
 
-        assertNotNull(result);
-        assertEquals("DEF789", result.getFlightNumber());
+        assertTrue(validator.validate(validFlight).isEmpty());
     }
 
-    @Test
-    void testFindFlightById() {
-        when(flightRepository.findById(1L)).thenReturn(Optional.of(flight));
 
-        Optional<Flight> result = flightRepository.findById(1L);
-
-        assertTrue(result.isPresent());
-        assertEquals("ABC123", result.get().getFlightNumber());
-    }
-
-    @Test
-    void testFindFlightByNonExistentId() {
-        when(flightRepository.findById(2L)).thenReturn(Optional.empty());
-
-        Optional<Flight> result = flightRepository.findById(2L);
-
-        assertFalse(result.isPresent());
-    }
 }
+

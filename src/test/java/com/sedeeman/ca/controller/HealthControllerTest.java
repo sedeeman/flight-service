@@ -1,6 +1,7 @@
 package com.sedeeman.ca.controller;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -14,6 +15,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(HealthController.class)
+@DisplayName("Health Controller Tests")
 class HealthControllerTest {
 
     @MockBean
@@ -27,18 +29,20 @@ class HealthControllerTest {
     }
 
     @Test
-    void testCheckHealth_Up() throws Exception {
+    @DisplayName("Test Check Health - Up")
+    void testCheckHealthUp() throws Exception {
         when(healthController.health()).thenReturn(Health.up().build());
 
         mockMvc.perform(get("/health")).andExpect(status().isOk());
     }
 
     @Test
-    void testCheckHealth_Down() throws Exception {
+    @DisplayName("Test Check Health - Down")
+    void testCheckHealthDown() throws Exception {
         when(healthController.health()).thenReturn(Health.down().build());
 
         mockMvc.perform(get("/health"))
                 .andExpect(content().string(""));
     }
-
 }
+

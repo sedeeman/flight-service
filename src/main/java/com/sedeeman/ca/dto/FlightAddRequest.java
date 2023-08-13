@@ -1,12 +1,17 @@
 package com.sedeeman.ca.dto;
 
+import com.sedeeman.ca.model.FlightStatus;
 import com.sedeeman.ca.model.FlightType;
-import jakarta.persistence.*;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import javax.validation.constraints.Max;
 import java.time.LocalDateTime;
 
 @Getter
@@ -15,36 +20,37 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class FlightAddRequest {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Max(value = 9999999999L)
-    private Long flightId;
-
-    @NonNull
+    @NotNull
     @NotBlank
-    @Max(value = 9999999999L)
     private String flightNumber;
 
-    @NonNull
-    private LocalDateTime scheduledTime;
+    @NotNull
+    @NotBlank
+    @Size(min = 1, max = 100)
+    private String originLocation;
 
-    @NonNull
+    @NotNull
+    @NotBlank
+    @Size(min = 1, max = 100)
+    private String destinationLocation;
+
+    @NotNull
     @Enumerated(EnumType.STRING)
     private FlightType flightType;
 
-    @NonNull
+    @NotNull
     @NotBlank
     @Size(min = 1, max = 100)
-    private String airportCode;
+    private String terminalGate;
 
-    @NonNull
-    @NotBlank
-    @Size(min = 1, max = 100)
-    private String airportName;
+    @NotNull
+    private LocalDateTime departureTime;
 
-    @NonNull
-    @NotBlank
-    @Size(min = 1, max = 100)
-    private String location;
+    @NotNull
+    private LocalDateTime arrivalTime;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private FlightStatus status;
 
 }
