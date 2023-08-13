@@ -2,6 +2,10 @@
 
 ### The Flight Service Microservice provides  REST APIs to retrieve a list of all flights and add new flights.
 
+### Higl Level Design
+
+![image](https://github.com/sedeeman/flight-service/assets/119731054/db407763-bd14-4714-8b2a-9a821221db7d)
+
 ### Getting Started
 
 #### Clone the repository:
