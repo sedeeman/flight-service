@@ -4,7 +4,8 @@
 
 ### Higl Level Design
 
-![image](https://github.com/sedeeman/flight-service/assets/119731054/db407763-bd14-4714-8b2a-9a821221db7d)
+![image](https://github.com/sedeeman/flight-service/assets/119731054/65b6d6b4-8483-4867-af22-a53121f6f3ef)
+
 
 ### Getting Started
 
